@@ -12,12 +12,13 @@ dotenv.config();
 const app = express();
 
 // Middleware to handle cors
-// app.use(
-//   cors({
-//     origin: process.env.CLIENT_URL || "*",
-//     methods: ["GET", "POST", "PUT", "DELETE"],
-//   })
-// );
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
