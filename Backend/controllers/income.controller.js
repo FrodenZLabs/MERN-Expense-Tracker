@@ -3,10 +3,10 @@ import Income from "../models/income.models.js";
 
 export const addIncome = async (request, response, next) => {
   try {
-    const { icon, source, amount, date } = request.body;
+    const { icon, source, amount } = request.body;
     const userId = request.user.id;
 
-    if (!source | !amount | !date) {
+    if (!source | !amount) {
       return next(errorHandler(400, "Please enter all fields."));
     }
 
@@ -15,7 +15,7 @@ export const addIncome = async (request, response, next) => {
       icon,
       source,
       amount,
-      date: new Date.now(),
+      date: new Date(),
     });
     await newIncome.save();
 
@@ -25,6 +25,7 @@ export const addIncome = async (request, response, next) => {
       newIncome,
     });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error adding income."));
   }
 };
@@ -46,9 +47,9 @@ export const getAllIncome = async (request, response, next) => {
 
 export const deleteIncome = async (request, response, next) => {
   try {
-    const userId = request.params.id;
+    const incomeId = request.params.id;
 
-    await Income.findByIdAndDelete(userId);
+    await Income.findByIdAndDelete(incomeId);
     response.status(200).json({
       message: "Income deleted successfully.",
     });

@@ -4,15 +4,16 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import Income from "../models/income.models.js";
 import Expense from "../models/expense.models.js";
+import mongoose from "mongoose";
 
 export const signup = async (request, response, next) => {
-  const { fullName, email, password, profileImage } = request.body;
-
-  if (!fullName || !email || !password) {
-    return next(errorHandler(400, "Please enter all fields"));
-  }
-
   try {
+    const { fullName, email, password, profileImage } = request.body;
+
+    if (!fullName || !email || !password) {
+      return next(errorHandler(400, "Please enter all fields"));
+    }
+
     const existingUser = await Auth.findOne({ email });
     if (existingUser) {
       return next(errorHandler(400, "Email already exists."));
@@ -20,17 +21,18 @@ export const signup = async (request, response, next) => {
 
     const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new Auth({
-      username,
+      fullName,
       email,
       password: hashedPassword,
     });
 
     const savedUser = await newUser.save();
+    const { password: pass, ...rest } = savedUser._doc;
 
     response.status(201).json({
       success: true,
       message: "Sign Up successful.",
-      user: savedUser,
+      user: rest,
     });
   } catch (error) {
     next(errorHandler(500, "Error registering users."));
@@ -80,12 +82,12 @@ export const getDashboardData = async (request, response, next) => {
     const userId = request.user.id;
 
     const totalIncome = await Income.aggregate([
-      { $match: userId },
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
     const totalExpense = await Expense.aggregate([
-      { $match: userId },
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
       { $group: { _id: null, total: { $sum: "$amount" } } },
     ]);
 
@@ -109,22 +111,23 @@ export const getDashboardData = async (request, response, next) => {
       0
     );
 
-    const lastTransactions = [
-      ...(await Income.find({ userId })
-        .sort({ date: -1 })
-        .limit(5)
-        .map((transaction) => ({
-          ...transaction.toObject(),
-          type: "Income",
-        }))),
+    const incomeTransactions = await Income.find({ userId })
+      .sort({ date: -1 })
+      .limit(5);
 
-      ...(await Expense.find({ userId })
-        .sort({ date: -1 })
-        .limit(5)
-        .map((transaction) => ({
-          ...transaction.toObject(),
-          type: "Expense",
-        }))),
+    const expenseTransactions = await Expense.find({ userId })
+      .sort({ date: -1 })
+      .limit(5);
+
+    const lastTransactions = [
+      ...incomeTransactions.map((transaction) => ({
+        ...transaction.toObject(),
+        type: "Income",
+      })),
+      ...expenseTransactions.map((transaction) => ({
+        ...transaction.toObject(),
+        type: "Expense",
+      })),
     ].sort((a, b) => b.date - a.date);
 
     response.status(200).json({
@@ -144,6 +147,26 @@ export const getDashboardData = async (request, response, next) => {
       recentTransactions: lastTransactions,
     });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error fetching dashboard data."));
+  }
+};
+
+export const getUserInfo = async (request, response, next) => {
+  try {
+    const userId = request.user.id;
+
+    const user = await Auth.findById(userId);
+    if (!user) {
+      return next(errorHandler(400, "User not found."));
+    }
+
+    response.status(200).json({
+      success: true,
+      message: "User Info fetched successfully.",
+      user,
+    });
+  } catch (error) {
+    next(errorHandler(500, "Error getting user info."));
   }
 };

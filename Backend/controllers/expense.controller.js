@@ -1,29 +1,31 @@
+import { errorHandler } from "../middlewares/errorHandler.js";
 import Expense from "../models/expense.models.js";
 
 export const addExpense = async (request, response, next) => {
   try {
-    const { icon, category, amount, date } = request.body;
+    const { icon, category, amount } = request.body;
     const userId = request.user.id;
 
-    if (!category | !amount | !date) {
+    if (!category | !amount) {
       return next(errorHandler(400, "Please enter all fields."));
     }
 
-    const newIncome = new Income({
+    const newExpense = new Expense({
       userId,
       icon,
       category,
       amount,
-      date: new Date.now(),
+      date: new Date(),
     });
-    await newIncome.save();
+    await newExpense.save();
 
     response.status(201).json({
       success: true,
       message: "Added expense successfully.",
-      newIncome,
+      newExpense,
     });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error adding expense."));
   }
 };

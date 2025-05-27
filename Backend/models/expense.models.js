@@ -10,7 +10,7 @@ const expenseSchema = new mongoose.Schema(
     icon: {
       type: String,
     },
-    categoy: {
+    category: {
       type: String,
       required: true,
     },
