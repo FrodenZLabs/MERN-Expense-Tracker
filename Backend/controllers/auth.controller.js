@@ -8,7 +8,8 @@ import mongoose from "mongoose";
 
 export const signup = async (request, response, next) => {
   try {
-    const { fullName, email, password, profileImage } = request.body;
+    const { fullName, email, password } = request.body;
+    const profileImage = request.imageUrl;
 
     if (!fullName || !email || !password) {
       return next(errorHandler(400, "Please enter all fields"));
@@ -24,6 +25,7 @@ export const signup = async (request, response, next) => {
       fullName,
       email,
       password: hashedPassword,
+      profileImage,
     });
 
     const savedUser = await newUser.save();
@@ -35,6 +37,7 @@ export const signup = async (request, response, next) => {
       user: rest,
     });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error registering users."));
   }
 };
@@ -73,6 +76,7 @@ export const login = async (request, response, next) => {
         user: rest,
       });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error logging in users."));
   }
 };
@@ -133,9 +137,11 @@ export const getDashboardData = async (request, response, next) => {
     response.status(200).json({
       success: true,
       message: "Dashboard data fetched successfully.",
-      totalBalance: (totalIncome[0].total || 0) - (totalExpense[0].total || 0),
-      totalIncome: totalIncome[0].total || 0,
-      totalExpense: totalExpense[0].total || 0,
+      totalIncome: totalIncome.length > 0 ? totalIncome[0].total : 0,
+      totalExpense: totalExpense.length > 0 ? totalExpense[0].total : 0,
+      totalBalance:
+        (totalIncome.length > 0 ? totalIncome[0].total : 0) -
+        (totalExpense.length > 0 ? totalExpense[0].total : 0),
       last30DaysExpenseTransactions: {
         total: expenseLast60Days,
         transactions: last30DaysExpenseTransactions,
@@ -167,6 +173,18 @@ export const getUserInfo = async (request, response, next) => {
       user,
     });
   } catch (error) {
+    console.log(error);
     next(errorHandler(500, "Error getting user info."));
+  }
+};
+
+export const signout = (request, response, next) => {
+  try {
+    response.clearCookie("access_token").status(200).json({
+      success: true,
+      message: "User has been signed out successfully.",
+    });
+  } catch (error) {
+    next(errorHandler(500, "Error signing out."));
   }
 };

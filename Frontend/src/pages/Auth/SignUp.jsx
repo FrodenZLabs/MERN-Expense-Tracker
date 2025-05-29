@@ -1,32 +1,43 @@
-import { Link } from "react-router-dom";
-import Input from "../../components/inputs/Input";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import { useState } from "react";
+import Input from "../../components/Inputs/Input";
+import ProfilePhotoSelector from "../../components/Inputs/ProfilePhotoSelector";
 import { validateEmail } from "../../utils/helper";
-import ProfilePhotoSelector from "../../components/inputs/ProfilePhotoSelector";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../services/authService";
+import {
+  signUpFailure,
+  signUpStart,
+  signUpSuccess,
+} from "../../redux/reducers/authSlice";
+import { toast } from "react-toastify";
+import { HashLoader } from "react-spinners";
 
 const SignUp = () => {
-  const [profilePic, setProfilePic] = useState(null);
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const [profilePic, setProfilePic] = useState(null); // New state for profile image
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.authentication);
   const [errors, setErrors] = useState({});
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!fullName) {
-      newErrors.fullName = "Please enter your full name";
-    }
-
-    if (!validateEmail(email)) {
+    if (!formData.fullName) newErrors.fullName = "Please enter your full name";
+    if (!validateEmail(formData.email))
       newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!password) {
-      newErrors.password = "Please enter your password";
-    }
+    if (!formData.password) newErrors.password = "Please enter your password";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -34,67 +45,87 @@ const SignUp = () => {
     }
 
     setErrors({});
+    dispatch(signUpStart());
+
     try {
-      console.log("Handle Sign up.");
-      // Implement signup logic here
+      const submissionData = new FormData();
+      submissionData.append("fullName", formData.fullName);
+      submissionData.append("email", formData.email);
+      submissionData.append("password", formData.password);
+      if (profilePic) submissionData.append("profileImage", profilePic);
+
+      const response = await registerUser(submissionData);
+
+      dispatch(signUpSuccess());
+      toast.success(response.message);
+      navigate("/login");
     } catch (error) {
+      dispatch(signUpFailure());
       setErrors({
-        general:
-          error.response?.data?.message ||
-          "Something went wrong during sign up",
+        general: error || "Something went wrong during sign up",
       });
+      toast.error(error);
     }
   };
 
   return (
     <AuthLayout>
-      <div className="flex flex-col justify-center lg:w-[70&] h-3/4 md:h-full">
-        <h3 className="text-xl text-black font-semibold">Sign Up</h3>
+      {/* Full-screen loader */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
+          <HashLoader color="#ffcb00" size={200} />
+        </div>
+      )}
+
+      <div className="lg:w-[100%] h-auto md:h-full mt-10 md:mt-0 flex flex-col justify-center">
+        <h3 className="text-xl text-black font-semibold">Create an Account</h3>
         <p className="text-xs text-slate-700 mb-6 mt-[5px]">
-          Please enter your details to sign up.
+          Join us today by entering your details below to get started!.
         </p>
 
         <form onSubmit={handleSignUp}>
           <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
-          <div>
-            <div className="mb-4">
-              <Input
-                type="text"
-                placeholder="Full Name"
-                label="Full Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-              {errors.fullName && (
-                <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
-              )}
-            </div>
 
-            <div className="mb-4">
-              <Input
-                type="text"
-                placeholder="Email Address"
-                label="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-              )}
-            </div>
+          <div className="mb-4">
+            <Input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              label="Full Name"
+              value={formData.fullName}
+              onChange={handleInputChange}
+            />
+            {errors.fullName && (
+              <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>
+            )}
+          </div>
 
-            <div className="mb-4">
-              <Input
-                type="password"
-                placeholder="Password"
-                label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
-            </div>
+          <div className="mb-4">
+            <Input
+              type="text"
+              name="email"
+              placeholder="Email Address"
+              label="Email Address"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          <div className="mb-4 col-span-2">
+            <Input
+              type="password"
+              name="password"
+              placeholder="Password"
+              label="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
           </div>
 
           {errors.general && (
@@ -102,17 +133,21 @@ const SignUp = () => {
           )}
 
           <div className="flex justify-between mt-10">
-            <p className="text-xs text-slate-700">
+            <p className="text-[13px] text-slate-800">
               Already have an account?
-              <Link to="/login" className="cursor-pointer text-violet- px-1">
+              <Link
+                to="/login"
+                className="font-medium text-primary underline cursor-pointer px-1"
+              >
                 Login
               </Link>
             </p>
             <button
               type="submit"
               className="px-6 py-2 text-xs font-medium text-white bg-violet-400 hover:bg-violet-600 rounded-md"
+              disabled={loading}
             >
-              Sign Up
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </div>
         </form>
