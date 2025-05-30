@@ -79,6 +79,7 @@ const Login = () => {
               label="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              name="email"
             />
             {errors.email && (
               <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -92,6 +93,7 @@ const Login = () => {
               label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              name="password"
             />
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
