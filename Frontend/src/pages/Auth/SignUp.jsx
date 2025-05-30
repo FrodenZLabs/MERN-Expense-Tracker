@@ -12,7 +12,7 @@ import {
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
 import Input from "../../components/inputs/Input";
-import ProfilePhotoSelector from "../../components/Inputs/ProfilePhotoSelector";
+import ProfilePhotoSelector from "../../components/inputs/ProfilePhotoSelector";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
