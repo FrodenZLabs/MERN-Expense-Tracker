@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import { useState } from "react";
-import Input from "../../components/Inputs/Input";
 import ProfilePhotoSelector from "../../components/Inputs/ProfilePhotoSelector";
 import { validateEmail } from "../../utils/helper";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +12,7 @@ import {
 } from "../../redux/reducers/authSlice";
 import { toast } from "react-toastify";
 import { ClipLoader } from "react-spinners";
+import Input from "../../components/inputs/Input";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({

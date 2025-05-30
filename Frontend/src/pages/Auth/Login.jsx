@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/layouts/AuthLayout";
 import { useState } from "react";
-import Input from "../../components/Inputs/Input";
+import Input from "../../components/inputs/Input";
 import { validateEmail } from "../../utils/helper";
 import { loginUser } from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
