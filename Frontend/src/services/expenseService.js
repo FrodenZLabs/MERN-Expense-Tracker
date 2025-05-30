@@ -4,34 +4,34 @@ const API_URL = "http://localhost:8000";
 
 export const fetchAllExpense = async () => {
   try {
-    const response = await axios.get(
-      `${API_URL}/api/v1/expense/get`,
-      {},
-      { withCredentials: true }
-    );
+    const response = await axios.get(`${API_URL}/api/v1/expense/get`, {
+      withCredentials: true,
+    });
 
     return response.data || null;
   } catch (error) {
     console.error("Error fetching expense:", error);
-    throw error.response?.data?.errorMessage;
+    throw error.response?.data?.message;
   }
 };
 
-export const addExpense = async (formData) => {
+export const addExpense = async ({ category, amount, date, icon }) => {
   try {
     const response = await axios.post(
       `${API_URL}/api/v1/expense/add`,
-      formData,
+      { category, amount, date, icon },
       {
         withCredentials: true,
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
     return response.data || null;
   } catch (error) {
     console.error("Error adding expense:", error);
-    throw error.response?.data?.errorMessage;
+    throw error.response?.data?.message;
   }
 };
 
@@ -45,6 +45,20 @@ export const deleteExpense = async (expenseId) => {
     return response.data || null;
   } catch (error) {
     console.error("Error deleting expense:", error);
-    throw error.response?.data?.errorMessage;
+    throw error.response?.data?.message;
+  }
+};
+
+export const downloadExpenseExcel = async () => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/api/v1/expense/export-excel-file`,
+      { withCredentials: true, responseType: "blob" }
+    );
+
+    return response.data || null;
+  } catch (error) {
+    console.error("Error downloading expense:", error);
+    throw error.response?.data?.message;
   }
 };

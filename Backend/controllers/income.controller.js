@@ -1,9 +1,10 @@
 import { errorHandler } from "../middlewares/errorHandler.js";
 import Income from "../models/income.models.js";
+import xlsx from "xlsx";
 
 export const addIncome = async (request, response, next) => {
   try {
-    const { icon, source, amount } = request.body;
+    const { icon, source, amount, date } = request.body;
     const userId = request.user.id;
 
     if (!source | !amount) {
@@ -15,7 +16,7 @@ export const addIncome = async (request, response, next) => {
       icon,
       source,
       amount,
-      date: new Date(),
+      date,
     });
     await newIncome.save();
 
@@ -55,5 +56,27 @@ export const deleteIncome = async (request, response, next) => {
     });
   } catch (error) {
     next(errorHandler(500, "Error deleting income."));
+  }
+};
+
+export const downloadIncomeExcel = async (request, response, next) => {
+  try {
+    const userId = request.user.id;
+
+    const income = await Income.find({ userId }).sort({ date: -1 });
+    const data = income.map((item) => ({
+      Source: item.source,
+      Amount: item.amount,
+      Date: item.date,
+    }));
+
+    const wb = xlsx.utils.book_new();
+    const ws = xlsx.utils.json_to_sheet(data);
+    xlsx.utils.book_append_sheet(wb, ws, "Income");
+
+    xlsx.writeFile(wb, "Income_details.xlsx");
+    response.download("Income_details.xlsx");
+  } catch (error) {
+    next(errorHandler(500, "Error generating Excel file."));
   }
 };

@@ -13,6 +13,7 @@ import ExpenseTransaction from "../../components/Dashboard/ExpenseTransaction";
 import Last30DaysExpenses from "../../components/Dashboard/Last30DaysExpenses";
 import RecentIncomeWithChart from "../../components/Dashboard/RecentIncomeWithChart";
 import RecentIncome from "../../components/Dashboard/RecentIncome";
+import { toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -32,6 +33,10 @@ const Home = () => {
       setDashboardData(data);
     } catch (error) {
       console.error("Error fetching dashboard data: ", error);
+      if (error === "Unauthorised") {
+        toast.error("Session expired.Please login to continue.");
+        navigate("/login");
+      }
     } finally {
       setLoading(false);
     }
@@ -40,7 +45,6 @@ const Home = () => {
   useEffect(() => {
     fetchDashboardData();
   }, []);
-  console.log(dashboardData);
 
   return (
     <DashboardLayout activeMenu="Dashboard">
