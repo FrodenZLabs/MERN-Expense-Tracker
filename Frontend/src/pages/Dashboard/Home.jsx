@@ -5,7 +5,7 @@ import { IoMdCard } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { addThousandSeparator } from "../../utils/helper";
 import { getDashboardData } from "../../services/authService";
-import { HashLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 import RecentTransactions from "../../components/Dashboard/RecentTransactions";
 import { useNavigate } from "react-router-dom";
 import FinanceOverview from "../../components/Dashboard/FinanceOverview";
@@ -51,7 +51,7 @@ const Home = () => {
       {/* Full-screen loader */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
-          <HashLoader color="#ffcb00" size={200} />
+          <ClipLoader color="#ad46ff" size={130} />
         </div>
       )}
 

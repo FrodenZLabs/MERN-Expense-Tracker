@@ -6,12 +6,16 @@ const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
 
   return (
-    <div className="flex gap-5 bg-white border border-b border-gray-200 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30">
+    <div className="flex items-center justify-between bg-white border-b border-gray-300 py-2 md:py-4 px-4 md:px-7 top-0 z-10 md:sticky md:z-30">
+      {/* App Title */}
+      <h2 className="text-lg md:text-xl font-semibold text-black px-5">
+        Expense <span className="text-purple-600">Tracker</span>
+      </h2>
+
+      {/* Toggle Button (only on mobile) */}
       <button
         className="block lg:hidden text-black"
-        onClick={() => {
-          setOpenSideMenu(!openSideMenu);
-        }}
+        onClick={() => setOpenSideMenu((prev) => !prev)}
       >
         {openSideMenu ? (
           <HiOutlineX className="text-2xl" />
@@ -20,9 +24,9 @@ const Navbar = ({ activeMenu }) => {
         )}
       </button>
 
-      <h2 className="text-lg font-medium text-black">Expense Tracker</h2>
+      {/* Mobile Side Menu */}
       {openSideMenu && (
-        <div className="fixed bg-white -ml-4 top-[61px]">
+        <div className="fixed top-[46px] left-0 w-full h-full z-40 bg-white overflow-y-auto shadow-md lg:hidden transition-all duration-500">
           <SideMenu activeMenu={activeMenu} />
         </div>
       )}

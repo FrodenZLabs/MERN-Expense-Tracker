@@ -13,6 +13,7 @@ import ExpenseList from "../../components/Expense/ExpenseList";
 import Modal from "../../components/Modal";
 import AddExpenseForm from "../../components/Expense/AddExpenseForm";
 import DeleteAlert from "../../components/layouts/DeleteAlert";
+import { ClipLoader } from "react-spinners";
 
 const Expense = () => {
   const [expenseData, setExpenseData] = useState([]);
@@ -107,7 +108,13 @@ const Expense = () => {
   }, []);
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeMenu="Expense">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
+          <ClipLoader color="#ad46ff" size={130} />
+        </div>
+      )}
+
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
           <div>

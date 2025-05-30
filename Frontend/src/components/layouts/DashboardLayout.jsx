@@ -14,7 +14,9 @@ const DashboardLayout = ({ children, activeMenu }) => {
           <div className="max-[1080px]:hidden">
             <SideMenu activeMenu={activeMenu} />
           </div>
-          <div className="grow overflow-y-auto px-5 py-4">{children}</div>
+          <div className="grow overflow-y-auto px-3 md:px-5 py-4">
+            {children}
+          </div>
         </div>
       )}
     </div>

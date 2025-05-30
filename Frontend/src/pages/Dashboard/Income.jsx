@@ -13,6 +13,7 @@ import {
 } from "../../services/incomeService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const Income = () => {
   const [incomeData, setIncomeData] = useState([]);
@@ -107,7 +108,13 @@ const Income = () => {
   }, []);
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeMenu="Income">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
+          <ClipLoader color="#ad46ff" size={130} />
+        </div>
+      )}
+
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
           <div>

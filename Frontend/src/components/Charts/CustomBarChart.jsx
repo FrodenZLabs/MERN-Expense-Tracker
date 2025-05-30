@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -10,6 +11,22 @@ import {
 } from "recharts";
 
 const CustomBarChart = ({ data }) => {
+  const [chartHeight, setChartHeight] = useState(300);
+  const [fontSize, setFontSize] = useState(12);
+
+  // Responsive adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setChartHeight(width < 640 ? 220 : 300); // Smaller chart height on mobile
+      setFontSize(width < 640 ? 8 : 12); // Smaller font on mobile
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const getBarColor = (index) => {
     return index % 2 === 0 ? "#875cfF5" : "#cfbefb";
   };
@@ -34,18 +51,18 @@ const CustomBarChart = ({ data }) => {
   };
 
   return (
-    <div className="bg-white mt-6">
-      <ResponsiveContainer width="100%" height={300}>
+    <div className="bg-white">
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <BarChart data={data}>
           <CartesianGrid stroke="none" />
 
           <XAxis
             dataKey="month"
             stroke="none"
-            tick={{ fontSize: 12, fill: "#555" }}
+            tick={{ fontSize, fill: "#555" }}
           />
 
-          <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
+          <YAxis tick={{ fontSize, fill: "#555" }} stroke="none" />
 
           <Tooltip content={CustomTooltip} />
 

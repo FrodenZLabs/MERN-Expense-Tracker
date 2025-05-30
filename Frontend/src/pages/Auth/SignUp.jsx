@@ -12,7 +12,7 @@ import {
   signUpSuccess,
 } from "../../redux/reducers/authSlice";
 import { toast } from "react-toastify";
-import { HashLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -73,20 +73,23 @@ const SignUp = () => {
       {/* Full-screen loader */}
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black opacity-75 z-50">
-          <HashLoader color="#ffcb00" size={200} />
+          <ClipLoader color="#ad46ff" size={130} />
         </div>
       )}
 
-      <div className="lg:w-[100%] h-auto md:h-full mt-10 md:mt-0 flex flex-col justify-center">
+      <div className="h-full flex-grow md:mt-0 flex flex-col justify-center">
+        <h2 className="text-lg font-medium text-black mb-10">
+          Expense Tracker
+        </h2>
         <h3 className="text-xl text-black font-semibold">Create an Account</h3>
-        <p className="text-xs text-slate-700 mb-6 mt-[5px]">
+        <p className="text-xs md:text-base text-slate-700 mb-6 mt-[5px]">
           Join us today by entering your details below to get started!.
         </p>
 
         <form onSubmit={handleSignUp}>
           <ProfilePhotoSelector image={profilePic} setImage={setProfilePic} />
 
-          <div className="mb-4">
+          <div className="mb-1 md:mb-4">
             <Input
               type="text"
               name="fullName"
@@ -100,7 +103,7 @@ const SignUp = () => {
             )}
           </div>
 
-          <div className="mb-4">
+          <div className="mb-1 md:mb-4">
             <Input
               type="text"
               name="email"
@@ -114,7 +117,7 @@ const SignUp = () => {
             )}
           </div>
 
-          <div className="mb-4 col-span-2">
+          <div className="mb-1 md:mb-4 col-span-2">
             <Input
               type="password"
               name="password"
@@ -132,8 +135,8 @@ const SignUp = () => {
             <p className="text-red-500 text-xs mt-2">{errors.general}</p>
           )}
 
-          <div className="flex justify-between mt-10">
-            <p className="text-[13px] text-slate-800">
+          <div className="flex items-center justify-between mt-10">
+            <p className="text-xs md:text-base text-slate-800">
               Already have an account?
               <Link
                 to="/login"

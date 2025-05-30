@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -9,6 +10,22 @@ import {
 } from "recharts";
 
 const CustomLineChart = ({ data }) => {
+  const [chartHeight, setChartHeight] = useState(300);
+  const [fontSize, setFontSize] = useState(12);
+
+  // Responsive adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setChartHeight(width < 640 ? 220 : 300); // Smaller chart height on mobile
+      setFontSize(width < 640 ? 10 : 12); // Smaller font on mobile
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
@@ -30,7 +47,7 @@ const CustomLineChart = ({ data }) => {
 
   return (
     <div className="bg-white">
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={chartHeight}>
         <AreaChart data={data}>
           <defs>
             <linearGradient id="incomeGradient" x1="0" x2="0" y1="0" y2="1">
@@ -43,10 +60,10 @@ const CustomLineChart = ({ data }) => {
           <XAxis
             dataKey="month"
             stroke="none"
-            tick={{ fontSize: 12, fill: "#555" }}
+            tick={{ fontSize, fill: "#555" }}
           />
 
-          <YAxis tick={{ fontSize: 12, fill: "#555" }} stroke="none" />
+          <YAxis tick={{ fontSize, fill: "#555" }} stroke="none" />
 
           <Tooltip content={CustomTooltip} />
 

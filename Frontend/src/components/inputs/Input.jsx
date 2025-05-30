@@ -17,7 +17,7 @@ const Input = ({
 
   return (
     <div>
-      <label className="text-[13px] text-slate-800">{label}</label>
+      <label className="text-sm md:text-base text-slate-800">{label}</label>
 
       <div className="input-box">
         <input

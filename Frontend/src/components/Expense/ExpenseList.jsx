@@ -6,9 +6,9 @@ const ExpenseList = ({ transactions, onDelete, onDownload }) => {
   return (
     <div className="card">
       <div className="flex items-center justify-between">
-        <h5 className="text-lg">All Expenses</h5>
+        <h5 className="text-base md:text-lg">All Expenses</h5>
         <button className="card-btn" onClick={onDownload}>
-          <LuDownload className="text-base" />
+          <LuDownload className="text-sm md:text-lg" />
         </button>
       </div>
 
@@ -16,7 +16,7 @@ const ExpenseList = ({ transactions, onDelete, onDownload }) => {
         {transactions?.map((expense) => (
           <TransactionInfoCard
             key={expense._id}
-            title={expense.source}
+            title={expense.category}
             icon={expense.icon}
             date={moment(expense.date).format("MMMM Do YYYY")}
             amount={expense.amount}
