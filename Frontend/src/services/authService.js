@@ -5,7 +5,7 @@ const API_URL = "http://localhost:8000";
 export const loginUser = async (email, password) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/v1/auth/login`,
+      `${API_URL}/api/auth/login`,
       {
         email,
         password,
@@ -27,7 +27,7 @@ export const loginUser = async (email, password) => {
 export const logoutUser = async () => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/v1/auth/signout`,
+      `${API_URL}/api/auth/signout`,
       {},
       { withCredentials: true }
     );
@@ -41,7 +41,7 @@ export const logoutUser = async () => {
 export const registerUser = async (submissionData) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/v1/auth/signup`,
+      `${API_URL}/api/auth/signup`,
       submissionData,
       {
         headers: {
@@ -59,7 +59,7 @@ export const registerUser = async (submissionData) => {
 // Fetch user profile
 export const fetchUserProfile = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/v1/auth/getUser`, {
+    const response = await axios.get(`${API_URL}/api/auth/getUser`, {
       withCredentials: true,
     });
 
@@ -73,7 +73,7 @@ export const fetchUserProfile = async () => {
 export const getDashboardData = async () => {
   try {
     const response = await axios.get(
-      `${API_URL}/api/v1/auth/getDashboardData`,
+      `${API_URL}/api/auth/getDashboardData`,
       {
         withCredentials: true,
       }

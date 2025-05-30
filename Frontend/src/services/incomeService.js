@@ -4,7 +4,7 @@ const API_URL = "http://localhost:8000";
 
 export const fetchAllIncome = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/v1/income/get`, {
+    const response = await axios.get(`${API_URL}/api/income/get`, {
       withCredentials: true,
     });
 
@@ -18,7 +18,7 @@ export const fetchAllIncome = async () => {
 export const addIncome = async ({ source, amount, date, icon }) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/v1/income/add`,
+      `${API_URL}/api/income/add`,
       { source, amount, date, icon },
       {
         withCredentials: true,
@@ -38,7 +38,7 @@ export const addIncome = async ({ source, amount, date, icon }) => {
 export const deleteIncome = async (incomeId) => {
   try {
     const response = await axios.delete(
-      `${API_URL}/api/v1/income/delete/${incomeId}`,
+      `${API_URL}/api/income/delete/${incomeId}`,
       { withCredentials: true }
     );
 
@@ -52,7 +52,7 @@ export const deleteIncome = async (incomeId) => {
 export const downloadIncomeExcel = async () => {
   try {
     const response = await axios.get(
-      `${API_URL}/api/v1/income/export-excel-file`,
+      `${API_URL}/api/income/export-excel-file`,
       { withCredentials: true, responseType: "blob" }
     );
 
