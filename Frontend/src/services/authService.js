@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "https://mern-expense-tracker-f9le.onrender.com";
 
 export const loginUser = async (email, password) => {
   try {
