@@ -4,7 +4,7 @@ const API_URL = "http://localhost:8000";
 
 export const fetchAllIncome = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/income/get`, {
+    const response = await axios.get(`${API_URL}/income/get`, {
       withCredentials: true,
     });
 
@@ -18,7 +18,7 @@ export const fetchAllIncome = async () => {
 export const addIncome = async ({ source, amount, date, icon }) => {
   try {
     const response = await axios.post(
-      `${API_URL}/api/income/add`,
+      `${API_URL}/income/add`,
       { source, amount, date, icon },
       {
         withCredentials: true,
@@ -38,7 +38,7 @@ export const addIncome = async ({ source, amount, date, icon }) => {
 export const deleteIncome = async (incomeId) => {
   try {
     const response = await axios.delete(
-      `${API_URL}/api/income/delete/${incomeId}`,
+      `${API_URL}/income/delete/${incomeId}`,
       { withCredentials: true }
     );
 
@@ -51,10 +51,10 @@ export const deleteIncome = async (incomeId) => {
 
 export const downloadIncomeExcel = async () => {
   try {
-    const response = await axios.get(
-      `${API_URL}/api/income/export-excel-file`,
-      { withCredentials: true, responseType: "blob" }
-    );
+    const response = await axios.get(`${API_URL}/income/export-excel-file`, {
+      withCredentials: true,
+      responseType: "blob",
+    });
 
     return response.data || null;
   } catch (error) {

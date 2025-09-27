@@ -58,7 +58,7 @@ const SignUp = () => {
 
       dispatch(signUpSuccess());
       toast.success(response.message);
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       dispatch(signUpFailure());
       setErrors({
@@ -139,7 +139,7 @@ const SignUp = () => {
             <p className="text-xs md:text-base text-slate-800">
               Already have an account?
               <Link
-                to="/login"
+                to="/"
                 className="font-medium text-primary underline cursor-pointer px-1"
               >
                 Login

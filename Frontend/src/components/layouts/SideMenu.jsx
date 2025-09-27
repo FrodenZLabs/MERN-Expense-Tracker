@@ -25,7 +25,7 @@ const SideMenu = ({ activeMenu }) => {
       const data = await logoutUser();
       toast.success(data.message);
       dispatch(signoutSuccess());
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       console.log(error);
       toast.error("An error occurred while trying to log out");

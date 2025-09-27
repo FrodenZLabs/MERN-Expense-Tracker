@@ -7,18 +7,27 @@ import error from "./config/error.js";
 import authRoutes from "./routes/auth.routes.js";
 import expenseRoutes from "./routes/expense.routes.js";
 import incomeRoutes from "./routes/income.routes.js";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
 
 connectDB();
 
-app.use("/api/auth", authRoutes);
-app.use("/api/expense", expenseRoutes);
-app.use("/api/income", incomeRoutes);
+app.use("/auth", authRoutes);
+app.use("/expense", expenseRoutes);
+app.use("/income", incomeRoutes);
 
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname, "/Frontend/dist")));

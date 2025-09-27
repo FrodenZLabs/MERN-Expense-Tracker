@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
+import PrivateRoute from "./components/PrivateRoute";
 
 const App = () => {
   return (
@@ -14,9 +15,11 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signUp" element={<SignUp />} />
-        <Route path="/dashboard" element={<Home />} />
-        <Route path="/income" element={<Income />} />
-        <Route path="/expense" element={<Expense />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Home />} />
+          <Route path="/income" element={<Income />} />
+          <Route path="/expense" element={<Expense />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
